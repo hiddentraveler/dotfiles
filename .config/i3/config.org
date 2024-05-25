@@ -1,0 +1,326 @@
+#+TITLE: i3 config
+#+DESCRIPTION: i3config file
+#+PROPERTY: header-args :tangle config
+* Fonts
+first is the name of the font next is the size of the font.
+#+begin_src text
+font pango:monospace 8
+#+end_src
+    
+* system control with specalized buttons.
+#+begin_src text
+set $refresh_i3status killall -SIGUSR1 i3status
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+bindsym XF86MonBrightnessUp exec xbacklight -inc 20 && $refresh_i3status
+bindsym XF86MonBrightnessDown exec xbacklight -dec 20 && $refresh_i3status
+bindsym Print exec --no-startup-id xfce4-screenshooter -fs /home/neoorez/Pictures/Screenshots
+#+end_src
+* tiling manager control
+#+begin_src text
+set $mod Mod4
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+
+
+# kill focused window
+bindsym $mod+q kill
+
+# change focus
+bindsym $mod+j focus left
+bindsym $mod+k focus down
+bindsym $mod+l focus up
+bindsym $mod+semicolon focus right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# move focused window
+bindsym $mod+Shift+j move left
+bindsym $mod+Shift+k move down
+bindsym $mod+Shift+l move up
+bindsym $mod+Shift+semicolon move right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# split in horizontal orientation
+bindsym $mod+h split h
+
+# split in vertical orientation
+bindsym $mod+v split v
+
+# enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen toggle
+
+# change container layout (stacked, tabbed, toggle split)
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# change focus between tiling / floating windows
+bindsym $mod+space focus mode_toggle
+
+# focus the parent container
+bindsym $mod+a focus parent
+
+# reload the configuration file
+bindsym $mod+Shift+c reload
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+r restart
+# resize window (you can also use the mouse for that)
+mode "resize" {
+        # These bindings trigger as soon as you enter the resize mode
+
+        # Pressing left will shrink the window’s width.
+        # Pressing right will grow the window’s width.
+        # Pressing up will shrink the window’s height.
+        # Pressing down will grow the window’s height.
+        bindsym j resize shrink width 10 px or 10 ppt
+        bindsym k resize grow height 10 px or 10 ppt
+        bindsym l resize shrink height 10 px or 10 ppt
+        bindsym semicolon resize grow width 10 px or 10 ppt
+
+        # same bindings, but for the arrow keys
+        bindsym Left resize shrink width 10 px or 10 ppt
+        bindsym Down resize grow height 10 px or 10 ppt
+        bindsym Up resize shrink height 10 px or 10 ppt
+        bindsym Right resize grow width 10 px or 10 ppt
+
+        # back to normal: Enter or Escape or $mod+r
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+r mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+#+end_src
+
+* workspace name,switching and movement
+#+begin_src text
+set $ws1 "1:"
+set $ws2 "2:"
+set $ws3 "3:"
+set $ws4 "4:"
+set $ws5 "5:"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+
+# switch to workspace
+bindsym $mod+1 workspace number $ws1
+bindsym $mod+2 workspace number $ws2
+bindsym $mod+3 workspace number $ws3
+bindsym $mod+4 workspace number $ws4
+bindsym $mod+5 workspace number $ws5
+bindsym $mod+6 workspace number $ws6
+bindsym $mod+7 workspace number $ws7
+bindsym $mod+8 workspace number $ws8
+bindsym $mod+9 workspace number $ws9
+bindsym $mod+0 workspace number $ws10
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace number $ws1
+bindsym $mod+Shift+2 move container to workspace number $ws2
+bindsym $mod+Shift+3 move container to workspace number $ws3
+bindsym $mod+Shift+4 move container to workspace number $ws4
+bindsym $mod+Shift+5 move container to workspace number $ws5
+bindsym $mod+Shift+6 move container to workspace number $ws6
+bindsym $mod+Shift+7 move container to workspace number $ws7
+bindsym $mod+Shift+8 move container to workspace number $ws8
+bindsym $mod+Shift+9 move container to workspace number $ws9
+bindsym $mod+Shift+0 move container to workspace number $ws10
+
+#+end_src
+* i3 bar
+#+begin_src text
+bar {
+  colors {
+    background #282A36
+    statusline #F8F8F2
+    separator  #44475A
+
+    focused_workspace  #44475A #44475A #F8F8F2
+    active_workspace   #282A36 #44475A #F8F8F2
+    inactive_workspace #282A36 #282A36 #BFBFBF
+    urgent_workspace   #FF5555 #FF5555 #F8F8F2
+    binding_mode       #FF5555 #FF5555 #F8F8F2
+  }
+	position top
+	status_command /usr/bin/bumblebee-status \
+	       -m time weather brightness battery pasink pasource \
+	       -p weather.showcity="false" weather.location="1256639" weather.apikey="c341e6bf95981a89f2def0f008d7901b" time.format="%a,%d %b|%H:%M:%S" nic.exclude="eno1,lo" disk.path="/home/neoorez" pomodoro.work="50" pomodoro.break="10" pomodoro.notify="/home/neoorez/.config/i3/pomodoro/notify.sh" shortcut.cmds="shutdown -h now" shortcut.labels="shutdown" pacman.sum="True" \
+	       -t dracula-powerline
+}
+
+#+end_src
+* Application schortcut
+#+begin_src text
+bindsym $mod+d exec --no-startup-id "dmenu_run -nf '#F8F8F2' -nb '#282A36' -sb '#6272A4' -sf '#F8F8F2' -fn 'monospace-10' -p 'dmenu%'"
+bindsym $mod+Return exec xfce4-terminal
+bindsym $mod+Shift+Return exec thunar
+bindsym $mod+X exec --no-startup-id arcolinux-logout
+#+end_src
+* assign workspaces to specific application
+#+begin_src text
+assign [class="Firefox"]  $ws1
+assign [class="googlecalendardark-nativefier-e22938"] $ws2
+assign [class="Museeks"]  $ws3
+assign [class="Gnome-pomodoro"] $ws3
+assign [class="TelegramDesktop"] $ws4
+
+#+end_src
+* start system applications and normal applications at startup
+#+begin_src text
+exec_always --no-startup-idsetxkbmap -option caps:escape &
+exec_always --no-startup-id autotiling
+exec --no-startup-id nm-applet
+exec_always --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+exec_always --no-startup-id xinput set-prop 11 334 1
+exec_always --no-startup-id numlockx on
+exec_always .config/i3/nextcloud.sh
+exec_always --no-startup-id pamac-tray
+exec .config/i3/variety.sh
+exec_always --no-startup-id /bin/albert
+exec_always /usr/lib/xfce4/notifyd/xfce4-notifyd &
+#+end_src
+* Picom settings
+if you want transparency on non-focused windows, ...
+#+begin_src text
+exec_always --no-startup-id /bin/picom  --experimental-backend --config ~/.config/picom.conf
+bindsym control+mod1+o exec --no-startup-id ~/.config/scripts/picom-switch.sh
+#+end_src
+* Bar toggle
+bar toggle, hide or show
+#+begin_src text
+bindsym $mod+b bar mode toggle
+#+end_src
+
+* Border control
+#+begin_src text
+hide_edge_borders both
+bindsym $mod+shift+b exec --no-startup-id i3-msg border toggle
+#+end_src
+changing border style
+#+begin_src text
+bindsym $mod+t border normal
+bindsym $mod+y border 1pixel
+bindsym $mod+u border none
+#+end_src
+new window and float normal
+#+begin_src text
+new_window normal
+new_float normal
+#+end_src
+
+* Popups during fullscreen mode
+#+begin_src text
+popup_during_fullscreen smart
+#+end_src
+* i3 gaps next
+additional settings:
+for_window [class="^.*"] border pixel 1
+#+begin_src text
+default_border pixel 2
+default_floating_border pixel 1
+gaps inner 3
+gaps outer 3
+#+end_src
+* i3 gaps change
+#+begin_src text
+set $mode_gaps Gaps: (o) outer, (i) inner
+set $mode_gaps_outer Outer Gaps: +|-|0 (local), Shift + +|-|0 (global)
+set $mode_gaps_inner Inner Gaps: +|-|0 (local), Shift + +|-|0 (global)
+bindsym $mod+Shift+g mode "$mode_gaps"
+
+mode "$mode_gaps" {
+        bindsym o      mode "$mode_gaps_outer"
+        bindsym i      mode "$mode_gaps_inner"
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+mode "$mode_gaps_inner" {
+        bindsym plus  gaps inner current plus 3
+        bindsym minus gaps inner current minus 3
+        bindsym 0     gaps inner current set 0
+
+        bindsym Shift+plus  gaps inner all plus 3
+        bindsym Shift+minus gaps inner all minus 3
+        bindsym Shift+0     gaps inner all set 0
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+mode "$mode_gaps_outer" {
+        bindsym plus  gaps outer current plus 3
+        bindsym minus gaps outer current minus 3
+        bindsym 0     gaps outer current set 0
+
+        bindsym Shift+plus  gaps outer all plus 3
+        bindsym Shift+minus gaps outer all minus 3
+        bindsym Shift+0     gaps outer all set 0
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+#+end_src
+* floating or tillied
+floating enabled from some programs - find with xprop
+#+begin_src text
+for_window [class="Arcolinux-welcome-app.py"] floating enable
+#for_window [class="Arcolinux-tweak-tool.py"] floating enable
+for_window [class="Arcolinux-calamares-tool.py"] floating enable
+for_window [class="Bleachbit"] floating disable
+for_window [class="Blueberry.py"] floating enable
+for_window [class="Brasero"] floating disable
+for_window [class="Galculator"] floating enable
+for_window [class="Gnome-disks"] floating disable
+for_window [class="^Gnome-font-viewer$"] floating enable
+for_window [class="^Gpick$"] floating enable
+for_window [class="Hexchat"] floating disable
+for_window [class="Imagewriter"] floating enable
+for_window [class="Font-manager"] floating enable
+#for_window [class="qt5ct|Lxappearance] floating enable
+for_window [class="Nitrogen"] floating disable
+for_window [class="Pavucontrol"] floating disable
+for_window [class="Peek"] floating enable
+for_window [class="^Skype$"] floating enable
+for_window [class="^Spotify$"] floating disable
+for_window [class="System-config-printer.py"] floating enable
+for_window [class="Unetbootin.elf"] floating enable
+for_window [class="Usb-creator-gtk"] floating enable
+for_window [class="^Vlc$"] floating disable
+for_window [class="Wine"] floating disable
+for_window [class="Xfburn"] floating disable
+for_window [class="Xfce4-appfinder"] floating enable
+for_window [class="Xfce4-settings-manager"] floating disable
+for_window [class="Xfce4-taskmanager"] floating enable
+#for_window [instance="gimp"] floating disable
+for_window [instance="script-fu"] border normal
+for_window [instance="variety"] floating disable
+for_window [title="Copying"] floating enable
+for_window [title="Deleting"] floating enable
+for_window [title="Moving"] floating enable
+for_window [title="^Terminator Preferences$"] floating enable
+for_window [title="Stacer"] floating enable
+for_window [window_role="About"] floating enable
+for_window [class="Anki" instance="anki" title="Add"] floating enable resize set 640 480
+for_window [class="Gnome-calculator"] floating enable
+
+#+end_src
