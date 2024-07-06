@@ -1,6 +1,22 @@
 #
 # ~/.bashrc
 #
+#
+#If tmux is opening the first window then it will open nvim with fzf
+tmux_running=$(pgrep tmux)
+if [[  $TMUX ]] &&[[  $tmux_running ]]; then
+	tmux_count=$(tmux list-windows | wc -l)
+	if [ $tmux_count -eq 1 ]; then
+		fzf_return=$(fzf --preview="cat {}")
+		if [[ $fzf_return ]]; then
+			nvim $fzf_return 		
+		fi
+	fi
+else
+	# neofetch
+	neofetch
+fi
+eval "$(fzf --bash)"
 
 [[ $- != *i* ]] && return
 
@@ -165,8 +181,6 @@ alias vi='nvim'
 alias nvom='nvim'
 alias c='clear'
 
-# neofetch
-neofetch
 #list
 alias la='ls -a'
 alias ll='ls -la'
