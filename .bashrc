@@ -181,6 +181,11 @@ alias vi='nvim'
 alias nvom='nvim'
 alias c='clear'
 
+#Air for got reloading golang apps
+alias air=$(go env GOPATH)/bin/air
+#adb
+alias adb='/opt/android-sdk/platform-tools/adb'
+
 #list
 alias la='ls -a'
 alias ll='ls -la'
